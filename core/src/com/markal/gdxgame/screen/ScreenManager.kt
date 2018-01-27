@@ -11,6 +11,7 @@ class ScreenManager(private val game: MyGdxGame) {
     private val gameScreen by lazy { GameScreen(game) }
     private val mainMenuScreen by lazy { MainMenuScreen(game) }
     private val pauseScreen by lazy { PauseScreen(game) }
+    private val endGameScreen by lazy { EndGameScreen(game) }
 
     private var lastScreen: Screen? = null
 
@@ -28,6 +29,12 @@ class ScreenManager(private val game: MyGdxGame) {
         game.screen = pauseScreen
         lastScreen = pauseScreen
     }
+
+    fun goToEndGame() {
+        game.screen = endGameScreen
+        lastScreen = endGameScreen
+    }
+
 
     fun goToPrevious() {
         game.screen = lastScreen ?: mainMenuScreen

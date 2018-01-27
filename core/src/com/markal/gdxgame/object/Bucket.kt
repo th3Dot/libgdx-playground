@@ -20,22 +20,25 @@ class Bucket(texture: Texture) : AbstractObject(
         texture
 ) {
 
-    private var move = 0
-
     init {
         assert(texture.height == 64)
         assert(texture.width == 64)
     }
 
+    fun reset() {
+        position.x = MyGdxGame.gameWidth / 2 - 64 / 2
+        position.y = MyGdxGame.gameHeight / 20
+    }
+
     override fun update(delta: Float) {
         val acceleration = Gdx.input.accelerometerY
         val normalizedAcceleration = when {
-            acceleration > 2 -> 2f
-            acceleration < -2 -> -2f
+            acceleration >= 3 -> 3f
+            acceleration <= -3 -> -3f
             else -> acceleration
         }
 
-        position.x = position.x + normalizedAcceleration * delta * 750 * MyGdxGame.scale
+        position.x = position.x + normalizedAcceleration / 10 * delta * 3500 * MyGdxGame.scale
 
         // make sure the bucket stays within the screen bounds
         if (position.x < 0) position.x = 0f

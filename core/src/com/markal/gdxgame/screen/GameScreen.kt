@@ -24,11 +24,19 @@ class GameScreen(game: MyGdxGame) : AbstractScreen(game) {
     private var lastDropTime: Long = 0
     private var dropsGathered: Int = 0
     private val raindrops: MutableList<RainDrop> = mutableListOf()
+
+    private var lives = 3
+
     override val objects: List<AbstractObject>
         get() = raindrops + bucket
 
     override val texts: List<Text>
-        get() = listOf(Text("Drops Collected: " + dropsGathered, 0f, MyGdxGame.gameHeight))
+        get() = listOf(
+                Text("Drops gathered: " + dropsGathered, 0f, MyGdxGame.gameHeight),
+                Text("Lives: " + lives, 0f, MyGdxGame.gameHeight - 50)
+        )
+    private var lastDifficultyTime = TimeUtils.nanoTime()
+    private var difficulty = 1f
 
     override fun prepareAssets() {
         // load the images for the droplet and the bucket, 64x64 pixels each
@@ -43,11 +51,14 @@ class GameScreen(game: MyGdxGame) : AbstractScreen(game) {
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (TimeUtils.nanoTime() - lastDropTime > 8000000000) spawnRaindrop()
+        if (TimeUtils.nanoTime() - lastDropTime > 1500000000 - difficulty * 250000000) spawnRaindrop()
 
         raindrops.iterator().let { iterator ->
             iterator.forEach { raindrop ->
-                if (raindrop.position.y + 64 < 0) iterator.remove()
+                if (raindrop.position.y + 64 < 0) {
+                    iterator.remove()
+                    lives -= 1
+                }
                 if (raindrop.position.overlaps(bucket.position)) {
                     dropsGathered++
                     dropSound.play()
@@ -55,6 +66,37 @@ class GameScreen(game: MyGdxGame) : AbstractScreen(game) {
                 }
             }
         }
+
+        if (difficulty <= 5 && TimeUtils.nanoTime() - lastDifficultyTime > 5000000000) {
+            difficulty += 0.1f
+            lastDifficultyTime = TimeUtils.nanoTime()
+        }
+
+        if (lives <= 0) {
+            endGame()
+        }
+    }
+
+    private fun endGame() {
+        recordScore()
+        resetGameState()
+        game.screenManager.goToEndGame()
+    }
+
+    private fun recordScore() {
+        if (Integer.valueOf(game.getHighestScore()) < dropsGathered) {
+            game.saveNewHighestScore(dropsGathered)
+        }
+        game.lastScore = dropsGathered
+    }
+
+    private fun resetGameState() {
+        rainMusic.pause()
+        lives = 3
+        raindrops.clear()
+        difficulty = 1f
+        dropsGathered = 0
+        bucket.reset()
     }
 
     override fun pause() {
