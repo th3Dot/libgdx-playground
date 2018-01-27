@@ -21,7 +21,7 @@ class RainDrop(texture: Texture) : AbstractObject(
 ) {
 
     override fun update(delta: Float) {
-        position.y -= 100 * delta * MyGdxGame.scale
+        position.y -= 400 * delta * MyGdxGame.scale
     }
 
     override fun processTouch(touchPoint: Vector3) {

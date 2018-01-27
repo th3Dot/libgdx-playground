@@ -43,7 +43,7 @@ class GameScreen(game: MyGdxGame) : AbstractScreen(game) {
     override fun render(delta: Float) {
         super.render(delta)
 
-        if (TimeUtils.nanoTime() - lastDropTime > 1000000000) spawnRaindrop()
+        if (TimeUtils.nanoTime() - lastDropTime > 8000000000) spawnRaindrop()
 
         raindrops.iterator().let { iterator ->
             iterator.forEach { raindrop ->

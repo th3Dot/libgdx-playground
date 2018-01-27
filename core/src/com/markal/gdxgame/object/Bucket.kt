@@ -1,5 +1,6 @@
 package com.markal.gdxgame.`object`
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector3
@@ -19,19 +20,28 @@ class Bucket(texture: Texture) : AbstractObject(
         texture
 ) {
 
+    private var move = 0
+
     init {
         assert(texture.height == 64)
         assert(texture.width == 64)
     }
 
     override fun update(delta: Float) {
-    }
+        val acceleration = Gdx.input.accelerometerY
+        val normalizedAcceleration = when {
+            acceleration > 2 -> 2f
+            acceleration < -2 -> -2f
+            else -> acceleration
+        }
 
-    override fun processTouch(touchPoint: Vector3) {
-        position.x = touchPoint.x - position.width / 2
+        position.x = position.x + normalizedAcceleration * delta * 750 * MyGdxGame.scale
 
         // make sure the bucket stays within the screen bounds
         if (position.x < 0) position.x = 0f
         if (position.x > MyGdxGame.gameWidth - position.width) position.x = MyGdxGame.gameWidth - position.width
+    }
+
+    override fun processTouch(touchPoint: Vector3) {
     }
 }
