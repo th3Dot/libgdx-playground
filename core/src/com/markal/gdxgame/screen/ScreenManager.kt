@@ -10,6 +10,7 @@ import com.markal.gdxgame.MyGdxGame
 class ScreenManager(private val game: MyGdxGame) {
     private val gameScreen by lazy { GameScreen(game) }
     private val mainMenuScreen by lazy { MainMenuScreen(game) }
+    private val pauseScreen by lazy { PauseScreen(game) }
 
     private var lastScreen: Screen? = null
 
@@ -21,6 +22,11 @@ class ScreenManager(private val game: MyGdxGame) {
     fun goToGame() {
         game.screen = gameScreen
         lastScreen = gameScreen
+    }
+
+    fun goToPause() {
+        game.screen = pauseScreen
+        lastScreen = pauseScreen
     }
 
     fun goToPrevious() {

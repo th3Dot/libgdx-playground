@@ -7,8 +7,16 @@ import com.markal.gdxgame.screen.ScreenManager
 
 class MyGdxGame : Game() {
 
+    companion object {
+        const val scale = 2f
+        const val gameHeight: Float = scale * 480
+        const val gameWidth: Float = scale * 800
+    }
+
     val batch by lazy { SpriteBatch() }
-    val font by lazy { BitmapFont() }
+    val font by lazy {
+        BitmapFont().apply { data.scale(scale) }
+    }
     val screenManager = ScreenManager(this)
 
     override fun create() {

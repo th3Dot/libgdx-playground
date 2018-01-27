@@ -1,7 +1,7 @@
 package com.markal.gdxgame.screen
 
-import com.badlogic.gdx.Gdx
 import com.markal.gdxgame.MyGdxGame
+import com.markal.gdxgame.font.Text
 
 /**
  * Author: Martin Kalenda
@@ -9,17 +9,15 @@ import com.markal.gdxgame.MyGdxGame
  */
 class MainMenuScreen(game: MyGdxGame) : AbstractScreen(game) {
 
+    override val texts: List<Text> = mutableListOf(
+            Text("Welcome to Drop", MyGdxGame.gameWidth / 6, MyGdxGame.gameHeight / 5),
+            Text("Tap anywhere to begin!", MyGdxGame.gameWidth / 6, MyGdxGame.gameWidth / 5 - 50)
+    )
+
     override fun render(delta: Float) {
         super.render(delta)
 
-        with(game) {
-            batch.begin()
-            font.draw(batch, "Welcome to Drop", 100f, 150f)
-            font.draw(batch, "Tap anywhere to begin!", 100f, 100f)
-            batch.end()
-        }
-
-        if (Gdx.input.isTouched) {
+        touchPoint()?.let { _ ->
             game.screenManager.goToGame()
             dispose()
         }
